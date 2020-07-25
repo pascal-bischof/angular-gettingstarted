@@ -12,6 +12,7 @@ export class ProductListComponent implements OnInit{
   imageWidth: number = 50;              //the type isn't needed an guessed by the compiler
   imageMargin: number = 2;
   showImage: boolean = false;
+  errorMessage: string;
 
   _listFilter: string;
   get listFilter(): string {
@@ -35,9 +36,13 @@ export class ProductListComponent implements OnInit{
 
   ngOnInit(): void {
     console.log("OnInit method")
-    this.products = this.productService.getProducts();
-    this.filteredProducts = this.products;
-
+    this.productService.getProducts().subscribe({
+      next: products => {
+        this.products = products;
+        this.filteredProducts = this.products;
+      },
+      error: err => this.errorMessage = err
+    });
   }
 
   onRatingClicked(message: string): void {
